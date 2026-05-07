@@ -90,6 +90,7 @@ app.all('/api/analytics/realtime', async (req, res) => wrapHandler(await loadApi
 app.all('/api/metrics/summary', async (req, res) => wrapHandler(await loadApi('metrics/summary'))(req, res));
 app.all('/api/metrics/send-report', async (req, res) => wrapHandler(await loadApi('metrics/send-report'))(req, res));
 app.all('/api/public-investor-profile', async (req, res) => wrapHandler(await loadApi('public-investor-profile'))(req, res));
+app.all('/api/newsletter-subscribe', async (req, res) => wrapHandler(await loadApi('newsletter-subscribe'))(req, res));
 app.all('/api/send-email-notification', async (req, res) => wrapHandler(await loadApi('send-email-notification'))(req, res));
 app.all('/api/wallet-pass', async (req, res) => wrapHandler(await loadApi('wallet-pass'))(req, res));
 app.all('/api/google-wallet-pass', async (req, res) => wrapHandler(await loadApi('google-wallet-pass'))(req, res));

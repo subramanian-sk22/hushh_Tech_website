@@ -16,6 +16,7 @@ import Consumers from './pages/services/consumers';
 import Business from './pages/services/business';
 import SignupPage from './pages/signup/ui';
 import Faq from './pages/faq';
+import NewsletterPage from './pages/newsletter/ui';
 import Career from './pages/career';
 import CommunityPage from './pages/community/ui';
 import CommunityPostPage from './pages/community/post-ui';
@@ -172,6 +173,7 @@ function App() {
             <Route path='/services/business' element={<Business />} />
             <Route path='/Signup' element={<SignupPage />} />
             <Route path='/faq' element={<Faq />} />
+            <Route path='/newsletter' element={<NewsletterPage />} />
             <Route path='/profile' element={
               <AuthRequiredRoute>
                 <Profile />
