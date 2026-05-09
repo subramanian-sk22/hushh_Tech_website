@@ -15,6 +15,7 @@ import theme from './theme';
 import Consumers from './pages/services/consumers';
 import Business from './pages/services/business';
 import SignupPage from './pages/signup/ui';
+import NewsletterPage from './pages/newsletter/ui';
 import Faq from './pages/faq';
 import Career from './pages/career';
 import CommunityPage from './pages/community/ui';
@@ -107,12 +108,13 @@ const ContentWrapper = ({ children }: { children: ReactNode }) => {
   const isDeleteAccount = location.pathname === '/delete-account';
   const isLogin = location.pathname.toLowerCase() === '/login';
   const isSignup = location.pathname.toLowerCase() === '/signup';
+  const isNewsletter = location.pathname === '/newsletter';
   const isProfile = location.pathname === '/profile';
   const isHushhHackathon = location.pathname === '/hushh-hackathon';
   const isMetrics = location.pathname === '/metrics' || location.pathname === '/metric';
 
   return (
-    <div className={`${isHomePage || isAuthCallback || isUserRegistration || isOnboarding || isKycFlow || isKycDemo || isA2APlayground || isInvestorGuide || isHushhAI || isKai || isStudio || isHushhUserProfile || isSignNda || isDocumentViewer || isInvestorProfile || isPublicInvestorProfile || isDiscoverFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isProfile || isHushhHackathon || isMetrics ? '' : 'mt-20'}`}>
+    <div className={`${isHomePage || isAuthCallback || isUserRegistration || isOnboarding || isKycFlow || isKycDemo || isA2APlayground || isInvestorGuide || isHushhAI || isKai || isStudio || isHushhUserProfile || isSignNda || isDocumentViewer || isInvestorProfile || isPublicInvestorProfile || isDiscoverFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isNewsletter || isProfile || isHushhHackathon || isMetrics ? '' : 'mt-20'}`}>
       {children}
     </div>
   );
@@ -132,6 +134,7 @@ const useLayoutVisibility = () => {
   const isDeleteAccount = location.pathname === '/delete-account';
   const isLogin = location.pathname.toLowerCase() === '/login';
   const isSignup = location.pathname.toLowerCase() === '/signup';
+  const isNewsletter = location.pathname === '/newsletter';
   const isSignNda = location.pathname.startsWith('/sign-nda');
   const isDocumentViewer = location.pathname.startsWith('/document-viewer');
   const isHushhUserProfile = location.pathname.startsWith('/hushh-user-profile');
@@ -143,7 +146,7 @@ const useLayoutVisibility = () => {
   const isPublicInvestorProfile = location.pathname.startsWith('/investor/');
   const isHushhHackathon = location.pathname === '/hushh-hackathon';
   const isMetrics = location.pathname === '/metrics' || location.pathname === '/metric';
-  const hideOld = isHushhAI || isKai || isStudio || isHomePage || isOnboarding || isProfile || isFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isSignNda || isDocumentViewer || isHushhUserProfile || isKycFlow || isKycDemo || isA2APlayground || isPublicInvestorProfile || isHushhHackathon || isMetrics;
+  const hideOld = isHushhAI || isKai || isStudio || isHomePage || isOnboarding || isProfile || isFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isNewsletter || isSignNda || isDocumentViewer || isHushhUserProfile || isKycFlow || isKycDemo || isA2APlayground || isPublicInvestorProfile || isHushhHackathon || isMetrics;
   return {
     showNavbar: !hideOld,
     showFooter: !hideOld,
@@ -171,6 +174,7 @@ function App() {
             <Route path='/services/consumers' element={<Consumers />} />
             <Route path='/services/business' element={<Business />} />
             <Route path='/Signup' element={<SignupPage />} />
+            <Route path='/newsletter' element={<NewsletterPage />} />
             <Route path='/faq' element={<Faq />} />
             <Route path='/profile' element={
               <AuthRequiredRoute>
