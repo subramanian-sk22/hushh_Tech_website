@@ -24,6 +24,7 @@ export interface SignupLogic {
   isSigningIn: boolean;
   oauthError: string | null;
   oauthFallbackUrl: string | null;
+  sessionNotice: string | null;
   handleAppleSignIn: () => Promise<void>;
   handleGoogleSignIn: () => Promise<void>;
 }
@@ -34,7 +35,7 @@ export const useSignupLogic = (): SignupLogic => {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [oauthError, setOAuthError] = useState<string | null>(null);
   const [oauthFallbackUrl, setOAuthFallbackUrl] = useState<string | null>(null);
-  const { status, startOAuth } = useAuthSession();
+  const { status, reason, startOAuth } = useAuthSession();
 
   const hostResolution = useMemo(
     () =>
@@ -150,6 +151,14 @@ export const useSignupLogic = (): SignupLogic => {
     isSigningIn,
     oauthError,
     oauthFallbackUrl,
+    sessionNotice:
+      status !== "invalidated"
+        ? null
+        : reason === "expired"
+          ? "Your previous session expired. Sign in again to continue."
+          : reason === "deleted"
+            ? "This account session is no longer available."
+            : "We couldn't restore your previous session. Sign in again to continue.",
     handleAppleSignIn,
     handleGoogleSignIn,
   };

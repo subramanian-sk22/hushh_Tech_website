@@ -26,6 +26,7 @@ export interface LoginLogic {
   bootTimedOut: boolean;
   oauthError: string | null;
   oauthFallbackUrl: string | null;
+  sessionNotice: string | null;
   handleAppleSignIn: () => Promise<void>;
   handleGoogleSignIn: () => Promise<void>;
 }
@@ -42,7 +43,7 @@ export const useLoginLogic = (): LoginLogic => {
   const [maxLoadingTimedOut, setMaxLoadingTimedOut] = useState(false);
   const [oauthError, setOAuthError] = useState<string | null>(null);
   const [oauthFallbackUrl, setOAuthFallbackUrl] = useState<string | null>(null);
-  const { status, startOAuth } = useAuthSession();
+  const { status, reason, startOAuth } = useAuthSession();
   const hasLoggedRedirectRef = useRef(false);
 
   const hostResolution = useMemo(
@@ -212,6 +213,21 @@ export const useLoginLogic = (): LoginLogic => {
   const isBootLoading = status === "booting" && !bootTimedOut;
   const isRedirectLoading = shouldRedirectToSupportedHost;
   const isLoading = (isRedirectLoading || isBootLoading) && !maxLoadingTimedOut;
+  const sessionNotice = useMemo(() => {
+    if (status !== "invalidated") {
+      return null;
+    }
+
+    if (reason === "expired") {
+      return "Your previous session expired. Sign in again to continue.";
+    }
+
+    if (reason === "deleted") {
+      return "This account session is no longer available.";
+    }
+
+    return "We couldn't restore your previous session. Sign in again to continue.";
+  }, [reason, status]);
 
   return {
     isLoading,
@@ -219,6 +235,7 @@ export const useLoginLogic = (): LoginLogic => {
     bootTimedOut,
     oauthError,
     oauthFallbackUrl,
+    sessionNotice,
     handleAppleSignIn,
     handleGoogleSignIn,
   };

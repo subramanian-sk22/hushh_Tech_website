@@ -128,15 +128,23 @@ export const AuthSessionProvider: React.FC<{
   }, [applySnapshot, clearLocalSession, supabase]);
 
   // Boot: Instantly resolve from localStorage (no network call).
-  // This eliminates the 'booting' state almost immediately.
-  // onAuthStateChange below handles INITIAL_SESSION for the definitive state.
+  // This eliminates the 'booting' state almost immediately while still
+  // refusing obviously stale persisted sessions.
   useEffect(() => {
     const bootFromLocalStorage = async () => {
       const localSnapshot = await getLocalSession(supabase);
+      if (localSnapshot.status === "invalidated") {
+        await clearLocalSession(
+          "invalidated",
+          localSnapshot.reason || "invalid_session"
+        );
+        return;
+      }
+
       applySnapshot(localSnapshot);
     };
     void bootFromLocalStorage();
-  }, [applySnapshot, supabase]);
+  }, [applySnapshot, clearLocalSession, supabase]);
 
   useEffect(() => {
     if (!supabase) {
@@ -164,10 +172,26 @@ export const AuthSessionProvider: React.FC<{
         return;
       }
 
-      // Trust the session provided by Supabase events directly.
-      // Supabase has already validated the token before firing the event.
-      // This eliminates redundant getUser() network calls on every
-      // INITIAL_SESSION, SIGNED_IN, and TOKEN_REFRESHED event.
+      if (event === "INITIAL_SESSION") {
+        const validatedSnapshot = await validateSessionCandidate(
+          supabase,
+          nextSession
+        );
+
+        if (validatedSnapshot.status === "invalidated") {
+          await clearLocalSession(
+            "invalidated",
+            validatedSnapshot.reason || "invalid_session"
+          );
+          return;
+        }
+
+        applySnapshot(validatedSnapshot);
+        return;
+      }
+
+      // Trust non-initial auth events directly. Supabase has already
+      // established the session before firing SIGNED_IN/TOKEN_REFRESHED.
       if (nextSession.user?.id && nextSession.access_token) {
         applySnapshot({
           status: "authenticated",

@@ -198,6 +198,27 @@ export function getAuthInvalidationReason(error?: {
   return "invalid_session";
 }
 
+const SESSION_EXPIRY_SKEW_MS = 30_000;
+
+export function getSessionStalenessReason(
+  session: Session | null
+): AuthSessionReason | null {
+  if (!session?.access_token || !session.user?.id) {
+    return "invalid_session";
+  }
+
+  if (typeof session.expires_at !== "number") {
+    return null;
+  }
+
+  const expiresAtMs = session.expires_at * 1000;
+  if (expiresAtMs <= Date.now() + SESSION_EXPIRY_SKEW_MS) {
+    return "expired";
+  }
+
+  return null;
+}
+
 /**
  * Timeout duration for the server-side getUser() validation call.
  * If the call takes longer than this, we fall back to trusting the local session.
@@ -214,6 +235,16 @@ export async function validateSessionCandidate(
       status: "anonymous",
       session: null,
       user: null,
+    };
+  }
+
+  const stalenessReason = getSessionStalenessReason(session);
+  if (stalenessReason) {
+    return {
+      status: "invalidated",
+      session: null,
+      user: null,
+      reason: stalenessReason,
     };
   }
 
@@ -304,6 +335,16 @@ export async function getLocalSession(
         session: null,
         user: null,
         reason: error ? getAuthInvalidationReason(error) : undefined,
+      };
+    }
+
+    const stalenessReason = getSessionStalenessReason(session);
+    if (stalenessReason) {
+      return {
+        status: "invalidated",
+        session: null,
+        user: null,
+        reason: stalenessReason,
       };
     }
 

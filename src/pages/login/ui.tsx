@@ -25,6 +25,7 @@ export default function LoginPage() {
     isSigningIn,
     oauthError,
     oauthFallbackUrl,
+    sessionNotice,
     handleAppleSignIn,
     handleGoogleSignIn,
   } = useLoginLogic();
@@ -73,6 +74,12 @@ export default function LoginPage() {
 
         {/* ── Sign-in Buttons ── */}
         <section className="space-y-3 mb-10">
+          {sessionNotice ? (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              <p>{sessionNotice}</p>
+            </div>
+          ) : null}
+
           <HushhTechCta
             variant={HushhTechCtaVariant.BLACK}
             onClick={handleAppleSignIn}
