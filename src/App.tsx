@@ -80,7 +80,7 @@ import AuthRequiredRoute from './components/AuthRequiredRoute';
 import HushhHackathonPage from './pages/hushh-hackathon/ui';
 import MetricsPage from './pages/metrics';
 import NotFound from './pages/NotFound';
-
+import NewsletterPage from "./pages/newsletter/ui";
 const KaiIndiaApp = React.lazy(() => import('./kai-india/pages'));
 
 // Content wrapper component that applies conditional margin
@@ -172,6 +172,7 @@ function App() {
             <Route path='/services/business' element={<Business />} />
             <Route path='/Signup' element={<SignupPage />} />
             <Route path='/faq' element={<Faq />} />
+            <Route path="/newsletter" element={<NewsletterPage />} />
             <Route path='/profile' element={
               <AuthRequiredRoute>
                 <Profile />
