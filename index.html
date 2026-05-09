@@ -7,6 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="NGkmaMm7bqtQ1y8EfcHbYg4DozGnurZ-xeYCJtJ8J0g" />
     <meta name="google-site-verification" content="OKGA8f_h2AxAqs3qyPBc3VW9i3HNktJNtbjxU-YXh4s" />
+    <script>
+      (function () {
+        var mode = localStorage.getItem("chakra-ui-color-mode") || "light";
+        var isDark = mode === "dark";
+        document.documentElement.classList.toggle("dark", isDark);
+        document.body.classList.toggle("dark", isDark);
+        document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+      })();
+    </script>
 
     <!-- Google Fonts - Playfair Display, Manrope, JetBrains Mono, Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

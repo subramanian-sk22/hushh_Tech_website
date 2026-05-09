@@ -10,7 +10,7 @@ import LoginPage from './pages/login/ui'
 import Contact from './pages/Contact';
 import ScrollToTop from './components/ScrollToTop';
 import OnboardingShellAutoPadding from './components/OnboardingShellAutoPadding';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, useColorModeValue } from '@chakra-ui/react';
 import theme from './theme';
 import Consumers from './pages/services/consumers';
 import Business from './pages/services/business';
@@ -80,6 +80,7 @@ import AuthRequiredRoute from './components/AuthRequiredRoute';
 import HushhHackathonPage from './pages/hushh-hackathon/ui';
 import MetricsPage from './pages/metrics';
 import NotFound from './pages/NotFound';
+import ColorModeSync from './components/ColorModeSync';
 
 const KaiIndiaApp = React.lazy(() => import('./kai-india/pages'));
 
@@ -155,10 +156,10 @@ function App() {
   // Inner layout component that uses hooks for conditional rendering
   const AppLayout = () => {
     const { showNavbar, showFooter, showMobileNav } = useLayoutVisibility();
-    const { session } = useAuthSession();
+    const appShellClass = useColorModeValue('bg-white text-slate-900', 'bg-slate-950 text-slate-100');
     
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className={`min-h-screen flex flex-col transition-colors duration-300 ${appShellClass}`}>
         {showNavbar && <Navbar />}
         <ContentWrapper>
           <Routes>
@@ -398,6 +399,7 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
+      <ColorModeSync />
       <AuthSessionProvider>
         <Router>
           <GoogleAnalyticsRouteTracker />

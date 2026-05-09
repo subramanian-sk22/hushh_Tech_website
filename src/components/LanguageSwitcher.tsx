@@ -187,8 +187,8 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
         onKeyDown={handleTriggerKeyDown}
         className={`group flex h-9 items-center gap-1 px-3 py-1.5 rounded-full transition-colors ${
           isDark 
-            ? 'bg-gray-800 active:bg-gray-700 border border-gray-700' 
-            : 'bg-gray-100 hover:bg-gray-200 border border-transparent dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700'
+            ? 'border border-slate-700 bg-slate-800 active:bg-slate-700' 
+            : 'border border-transparent bg-gray-100 hover:bg-gray-200 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700'
         }`}
         aria-label="Select language"
         aria-haspopup="menu"
@@ -208,7 +208,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
           id={menuId}
           role="menu"
           aria-label="Language options"
-          className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[200]"
+          className="absolute right-0 z-[200] mt-2 w-40 rounded-xl border border-gray-100 bg-white py-2 shadow-lg dark:border-slate-700 dark:bg-slate-900"
         >
           {languages.map((lang, index) => {
             const isSelected = i18n.language === lang.code;
@@ -225,8 +225,8 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
                 onKeyDown={(event) => handleOptionKeyDown(event, index, lang.code)}
                 className={`w-full flex items-center justify-between px-4 py-2.5 text-left text-sm transition-colors
                   ${isSelected 
-                    ? 'bg-[#135bec]/5 text-[#135bec] font-semibold' 
-                    : 'text-gray-700 hover:bg-gray-50'
+                    ? 'bg-[#135bec]/5 text-[#135bec] font-semibold dark:bg-[#135bec]/15 dark:text-blue-300' 
+                    : 'text-gray-700 hover:bg-gray-50 dark:text-slate-200 dark:hover:bg-slate-800'
                   }`}
               >
                 <span>{lang.name}</span>

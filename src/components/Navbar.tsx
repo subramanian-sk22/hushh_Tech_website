@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMenu, FiX, FiChevronDown, FiUser, FiTrash2, FiChevronDown as FiArrowDown } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import { Image, useToast, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
+import { Image, useToast, useBreakpointValue, useDisclosure, useColorMode } from "@chakra-ui/react";
 import hushhLogo from "../components/images/Hushhogo.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 import DeleteAccountModal from "./DeleteAccountModal";
@@ -10,6 +10,7 @@ import { useStockQuotes, StockQuote, STOCK_LOGOS } from "../hooks/useStockQuotes
 import config from "../resources/config/config";
 import { useAuthSession } from "../auth/AuthSessionProvider";
 import { SkipToContentLink } from "./ui/SkipToContentLink";
+import ThemeToggleButton from "./ThemeToggleButton";
 
 const WELCOME_TOAST_PENDING_KEY = "showWelcomeToast";
 const WELCOME_TOAST_USER_KEY = "showWelcomeToastUserId";
@@ -17,9 +18,9 @@ const WELCOME_TOAST_USER_KEY = "showWelcomeToastUserId";
 // Chip-based ticker component - Light theme design
 const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boolean }) => {
   return (
-    <div className="group flex h-10 shrink-0 items-center gap-2 rounded-full bg-white border border-gray-200 shadow-sm pl-2 pr-3.5 hover:shadow-md transition-all">
+    <div className="group flex h-10 shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-white pl-2 pr-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
       {/* Logo in gray circle */}
-      <div className="flex w-7 h-7 items-center justify-center rounded-full bg-gray-100 shrink-0 overflow-hidden">
+      <div className="flex w-7 h-7 items-center justify-center rounded-full bg-gray-100 shrink-0 overflow-hidden dark:bg-slate-800">
         {quote.logo ? (
           <img
             src={quote.logo}
@@ -30,11 +31,11 @@ const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boole
             }}
           />
         ) : (
-          <span className="text-[10px] font-bold text-gray-600">{quote.displaySymbol.charAt(0)}</span>
+          <span className="text-[10px] font-bold text-gray-600 dark:text-slate-300">{quote.displaySymbol.charAt(0)}</span>
         )}
       </div>
       {/* Stock symbol - use displaySymbol for cleaner display */}
-      <span className="text-[12px] font-bold text-gray-800 leading-none">{quote.displaySymbol}</span>
+      <span className="text-[12px] font-bold text-gray-800 leading-none dark:text-slate-100">{quote.displaySymbol}</span>
       {/* Percent change with arrow */}
       <div className={`ml-0.5 flex items-center gap-0.5 ${quote.isUp ? 'text-green-600' : 'text-red-500'}`}>
         <span className="text-[10px]">{quote.isUp ? '▲' : '▼'}</span>
@@ -66,7 +67,9 @@ export default function Navbar() {
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const isDesktop = isMobile === false;
+  const { colorMode } = useColorMode();
   const { session, user, status, signOut } = useAuthSession();
+  const isDarkMode = colorMode === "dark";
 
   // Hide ticker strip on onboarding & profile pages to keep UX clean
   const isOnboarding = location.pathname.startsWith('/onboarding');
@@ -215,11 +218,11 @@ export default function Navbar() {
       {/* Fixed Header with Navigation + Ticker - Light Theme */}
       <header className="fixed w-full z-[999] top-0">
         {/* Main Navigation Bar - Soft Light Background */}
-        <nav className="flex w-full items-center justify-between bg-[#F8F9FA] px-4 lg:px-8 h-16 border-b border-gray-200 transition-colors duration-300">
+        <nav className="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-[#F8F9FA] px-4 transition-colors duration-300 lg:px-8 dark:border-slate-800 dark:bg-slate-950/95 dark:backdrop-blur">
           {/* Left: Brand Lockup */}
           <Link to="/" className="flex items-center gap-3">
             {/* Hushh Logo Image in Circle with subtle gradient */}
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-200/50 shadow-sm shrink-0 overflow-hidden">
+            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-gray-200/50 bg-gradient-to-br from-gray-100 to-gray-200 shadow-sm shrink-0 dark:border-slate-700 dark:from-slate-800 dark:to-slate-700">
               <Image 
                 src={hushhLogo} 
                 alt="Hushh Logo" 
@@ -228,8 +231,8 @@ export default function Navbar() {
             </div>
             {/* Brand Text - Stacked Layout */}
             <div className="flex flex-col">
-              <span className="text-[18px] font-bold leading-none tracking-tight text-gray-900">Hushh</span>
-              <span className="text-[13px] text-gray-500 font-medium mt-0.5">Technologies</span>
+              <span className="text-[18px] font-bold leading-none tracking-tight text-gray-900 dark:text-white">Hushh</span>
+              <span className="mt-0.5 text-[13px] font-medium text-gray-500 dark:text-slate-400">Technologies</span>
             </div>
           </Link>
 
@@ -243,8 +246,8 @@ export default function Navbar() {
                   onClick={() => handleLinkClick(path)}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                     active
-                      ? 'bg-[#2F80ED]/10 text-[#1f6cc7]'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'bg-[#2F80ED]/10 text-[#1f6cc7] dark:bg-blue-500/15 dark:text-blue-300'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
                   }`}
                 >
                   {label}
@@ -256,7 +259,11 @@ export default function Navbar() {
           {/* Right: Utilities */}
           <div className="flex items-center gap-3">
             {/* Language Selector */}
-            <LanguageSwitcher variant="light" />
+            <LanguageSwitcher variant={isDarkMode ? "dark" : "light"} />
+
+            <ThemeToggleButton
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 transition-colors hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            />
 
             {/* Desktop Utility Actions */}
             {isDesktop && (
@@ -265,7 +272,7 @@ export default function Navbar() {
                   <>
                     <button
                       onClick={() => navigate('/hushh-user-profile')}
-                      className="hidden xl:inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                      className="hidden xl:inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                     >
                       {t('nav.viewProfile')}
                     </button>
@@ -302,7 +309,7 @@ export default function Navbar() {
 
         {/* Chip-based Ticker Strip - BELOW Navigation (hidden on onboarding & profile pages) */}
         {!hideTicker && (
-        <section className="relative w-full bg-[#F8F9FA] py-2.5 border-b border-gray-200">
+        <section className="relative w-full border-b border-gray-200 bg-[#F8F9FA] py-2.5 dark:border-slate-800 dark:bg-slate-950">
           {/* Ticker Marquee with Fade Mask */}
           <div className="ticker-mask relative flex w-full overflow-hidden">
             <div className="ticker-track flex items-center gap-3 px-4">
@@ -329,7 +336,7 @@ export default function Navbar() {
           {lastUpdated && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-[9px] font-medium text-gray-700">
+              <span className="text-[9px] font-medium text-gray-700 dark:text-slate-400">
                 {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
@@ -350,18 +357,18 @@ export default function Navbar() {
         >
           <div
             ref={drawerRef}
-            className="fixed inset-0 bg-[#F2F2F7] overflow-y-auto"
+            className="fixed inset-0 overflow-y-auto bg-[#F2F2F7] dark:bg-slate-950"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col min-h-full max-w-md mx-auto w-full px-4 pb-10">
               {/* Header: Menu title + Close button */}
               <div className="flex items-center justify-between pt-14 pb-4 px-0">
-                <h2 className="text-[34px] font-bold text-black tracking-tight leading-none">
+                <h2 className="text-[34px] font-bold tracking-tight leading-none text-black dark:text-white">
                   {t('nav.menu', 'Menu')}
                 </h2>
                 <button
                   onClick={toggleDrawer}
-                  className="w-[30px] h-[30px] flex items-center justify-center rounded-full bg-[#E3E3E8] text-[#8E8E93] active:bg-[#D1D1D6] transition-colors"
+                  className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#E3E3E8] text-[#8E8E93] transition-colors active:bg-[#D1D1D6] dark:bg-slate-800 dark:text-slate-400 dark:active:bg-slate-700"
                   aria-label="Close menu"
                 >
                   <FiX size={18} strokeWidth={3} />
@@ -369,7 +376,7 @@ export default function Navbar() {
               </div>
 
               {/* Section 1: Primary Navigation */}
-              <div className="bg-white rounded-[10px] overflow-hidden mb-5 shadow-sm">
+              <div className="mb-5 overflow-hidden rounded-[10px] bg-white shadow-sm dark:bg-slate-900">
                 {[
                   { path: "/", label: t('nav.home'), icon: "home", bg: "#007AFF" },
                   { path: "/about/leadership", label: t('nav.ourPhilosophy'), icon: "menu_book", bg: "#34C759" },
@@ -403,7 +410,7 @@ export default function Navbar() {
               </div>
 
               {/* Section 2: Contact & FAQ */}
-              <div className="bg-white rounded-[10px] overflow-hidden mb-5 shadow-sm">
+              <div className="mb-5 overflow-hidden rounded-[10px] bg-white shadow-sm dark:bg-slate-900">
                 {[
                   { path: "/contact", label: t('nav.contact'), icon: "mail", bg: "#8E8E93" },
                   { path: "/faq", label: t('nav.faq'), icon: "help", bg: "#FF9500" },

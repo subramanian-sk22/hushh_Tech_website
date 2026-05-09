@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { MotionConfig } from 'framer-motion'
+import { ColorModeScript } from '@chakra-ui/react'
 import App from './App.tsx'
 import ErrorBoundary from './components/ErrorBoundary.tsx'
 import './index.css'
 import config from './resources/config/config.ts'
+import theme from './theme'
 
 // Initialize i18n for multi-language support
 import './i18n'
@@ -43,6 +45,7 @@ import "@fontsource/dm-sans/700.css";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <MotionConfig reducedMotion="user">
       <ErrorBoundary>
         <App />

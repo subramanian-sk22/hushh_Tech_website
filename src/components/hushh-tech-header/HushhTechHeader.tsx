@@ -11,12 +11,13 @@ import hushhLogo from "../images/Hushhogo.png";
 import HushhTechNavDrawer from "../hushh-tech-nav-drawer/HushhTechNavDrawer";
 import { useStockQuotes, StockQuote } from "../../hooks/useStockQuotes";
 import { SkipToContentLink } from "../ui/SkipToContentLink";
+import ThemeToggleButton from "../ThemeToggleButton";
 
 /* ── Chip-based ticker component — matches Navbar design ── */
 const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boolean }) => (
-  <div className="group flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-white border border-gray-200 shadow-sm pl-1.5 pr-3 hover:shadow-md transition-all">
+  <div className="group flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-gray-200 bg-white pl-1.5 pr-3 shadow-sm transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
     {/* Logo circle */}
-    <div className="flex w-6 h-6 items-center justify-center rounded-full bg-gray-100 shrink-0 overflow-hidden">
+    <div className="flex w-6 h-6 items-center justify-center rounded-full bg-gray-100 shrink-0 overflow-hidden dark:bg-slate-800">
       {quote.logo ? (
         <img
           src={quote.logo}
@@ -28,14 +29,14 @@ const TickerChip = ({ quote, isLoading }: { quote: StockQuote; isLoading?: boole
           onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
       ) : (
-        <span className="text-[9px] font-bold text-gray-600">
+        <span className="text-[9px] font-bold text-gray-600 dark:text-slate-300">
           {quote.displaySymbol.charAt(0)}
         </span>
       )}
     </div>
 
     {/* Symbol */}
-    <span className="text-[11px] font-bold text-gray-800 leading-none">
+    <span className="text-[11px] font-bold text-gray-800 leading-none dark:text-slate-100">
       {quote.displaySymbol}
     </span>
 
@@ -71,7 +72,7 @@ const HushhTechHeader: React.FC<HushhTechHeaderProps> = ({
 
       {/* Fixed header — always pinned to top */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-sm ${className}`}
+        className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-sm dark:bg-slate-950 ${className}`}
       >
         {/* ── Top bar: Logo + Hamburger ── */}
         <div className="px-6 py-4 flex justify-between items-center">
@@ -87,31 +88,35 @@ const HushhTechHeader: React.FC<HushhTechHeaderProps> = ({
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-[18px] font-bold tracking-tight text-gray-900">
+              <span className="text-[18px] font-bold tracking-tight text-gray-900 dark:text-white">
                 hushh
               </span>
-              <span className="text-[11px] font-medium tracking-[0.08em] text-gray-400 uppercase">
+              <span className="text-[11px] font-medium tracking-[0.08em] text-gray-400 uppercase dark:text-slate-400">
                 Technologies
               </span>
             </div>
           </div>
 
-          {/* Hamburger menu button */}
-          <button
-            onClick={() => setIsDrawerOpen(true)}
-            className="w-10 h-10 rounded-full bg-black flex items-center justify-center hover:bg-black/80 transition-colors"
-            aria-label="Open menu"
-            tabIndex={0}
-          >
-            <span className="material-symbols-outlined text-white !text-[1.2rem]">
-              menu
-            </span>
-          </button>
+          <div className="flex items-center gap-3">
+            <ThemeToggleButton
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 transition-colors hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            />
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-black transition-colors hover:bg-black/80 dark:bg-slate-100"
+              aria-label="Open menu"
+              tabIndex={0}
+            >
+              <span className="material-symbols-outlined text-white !text-[1.2rem] dark:text-slate-950">
+                menu
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* ── Stock Ticker Strip — below header nav ── */}
         {showTicker && (
-          <section className="relative w-full bg-[#F8F9FA] py-2 border-t border-b border-gray-200">
+          <section className="relative w-full border-y border-gray-200 bg-[#F8F9FA] py-2 dark:border-slate-800 dark:bg-slate-950">
             {/* Fade-masked marquee */}
             <div className="hushh-ticker-mask relative flex w-full overflow-hidden">
               <div className="hushh-ticker-track flex items-center gap-2.5 px-3">
@@ -138,7 +143,7 @@ const HushhTechHeader: React.FC<HushhTechHeaderProps> = ({
             {lastUpdated && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[9px] font-medium text-gray-400">
+                <span className="text-[9px] font-medium text-gray-400 dark:text-slate-500">
                   {lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>
