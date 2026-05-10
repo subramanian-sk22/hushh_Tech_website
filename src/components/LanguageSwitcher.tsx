@@ -9,6 +9,9 @@ const languages = [
   { code: 'fr', name: 'Français', shortCode: 'FR' },
 ];
 
+const getBaseLanguageCode = (language: string | undefined) =>
+  language?.toLowerCase().split(/[-_]/)[0] || 'en';
+
 interface LanguageSwitcherProps {
   variant?: 'light' | 'dark';
 }
@@ -21,11 +24,12 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
   const triggerRef = useRef<HTMLButtonElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const menuId = 'language-switcher-menu';
+  const currentLanguageCode = getBaseLanguageCode(i18n.resolvedLanguage ?? i18n.language);
 
   // Get current language short code
-  const currentLang = languages.find(l => l.code === i18n.language)?.shortCode || 'EN';
+  const currentLang = languages.find(l => l.code === currentLanguageCode)?.shortCode || 'EN';
   const currentLangIndex = Math.max(
-    languages.findIndex((language) => language.code === i18n.language),
+    languages.findIndex((language) => language.code === currentLanguageCode),
     0
   );
 
@@ -211,7 +215,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'light' }
           className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-[200]"
         >
           {languages.map((lang, index) => {
-            const isSelected = i18n.language === lang.code;
+            const isSelected = currentLanguageCode === lang.code;
             return (
               <button
                 key={lang.code}

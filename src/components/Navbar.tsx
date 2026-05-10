@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FiMenu, FiX, FiChevronDown, FiUser, FiTrash2, FiChevronDown as FiArrowDown } from "react-icons/fi";
+import { FiMenu, FiX, FiChevronDown as FiArrowDown } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { Image, useToast, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
 import hushhLogo from "../components/images/Hushhogo.png";
@@ -350,10 +350,14 @@ export default function Navbar() {
         >
           <div
             ref={drawerRef}
-            className="fixed inset-0 bg-[#F2F2F7] overflow-y-auto"
+            className="fixed inset-0 bg-[#F2F2F7]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex flex-col min-h-full max-w-md mx-auto w-full px-4 pb-10">
+            <div
+              ref={scrollContainerRef}
+              onScroll={handleMenuScroll}
+              className="relative flex flex-col min-h-full max-w-md mx-auto w-full px-4 pb-10 overflow-y-auto"
+            >
               {/* Header: Menu title + Close button */}
               <div className="flex items-center justify-between pt-14 pb-4 px-0">
                 <h2 className="text-[34px] font-bold text-black tracking-tight leading-none">
@@ -562,6 +566,14 @@ export default function Navbar() {
                   Version 2.4.0 (Build 302)
                 </p>
               </div>
+
+              {showScrollIndicator && (
+                <div className="pointer-events-none sticky bottom-4 mt-4 flex justify-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#8E8E93] shadow-md backdrop-blur scroll-indicator-arrow">
+                    <FiArrowDown className="h-5 w-5" />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
