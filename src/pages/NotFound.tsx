@@ -10,7 +10,7 @@ const quickLinks = [
 
 export default function NotFound() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
+    <main className="relative min-h-screen overflow-hidden bg-black text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(38,124,255,0.26),_transparent_36%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.08),_transparent_28%)]" />
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-6xl items-center px-6 py-16 sm:px-8 lg:px-12">
@@ -30,7 +30,7 @@ export default function NotFound() {
               </div>
             </div>
 
-            <p className="mt-8 text-xs font-medium uppercase tracking-[0.3em] text-[#7fb0ff]">
+            <p className="mt-8 text-xs font-medium uppercase tracking-[0.3em] text-hushh-blue">
               Error 404
             </p>
             <h1 className="mt-4 max-w-xl text-5xl font-semibold tracking-tight text-white sm:text-6xl">
@@ -44,7 +44,7 @@ export default function NotFound() {
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
                 to="/"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-[#dce9ff]"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-gray-100"
               >
                 <span>Back to Home</span>
                 <span className="material-symbols-outlined text-base">
@@ -77,7 +77,7 @@ export default function NotFound() {
                     <Link
                       key={link.to}
                       to={link.to}
-                      className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80 transition hover:border-[#7fb0ff]/50 hover:bg-[#7fb0ff]/10 hover:text-white"
+                      className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80 transition hover:border-hushh-blue/50 hover:bg-hushh-blue/10 hover:text-white"
                     >
                       <span>{link.label}</span>
                       <span className="material-symbols-outlined text-base">
