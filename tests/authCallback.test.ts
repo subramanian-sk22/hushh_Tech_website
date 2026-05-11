@@ -128,6 +128,8 @@ describe("AuthCallback", () => {
     expect(mockExchangeCodeForSession).toHaveBeenCalledWith("fresh-code");
     expect(revalidateSessionMock).toHaveBeenCalled();
     expect(replaceStateSpy).toHaveBeenCalled();
+    expect(container.textContent).toContain("Set up your profile");
+    expect(container.textContent).toContain("Checkout community posts");
 
     await act(async () => {
       vi.runAllTimers();

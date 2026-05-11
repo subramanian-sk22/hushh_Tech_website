@@ -28,6 +28,9 @@ const mockOnAuthStateChange = vi.fn();
 const mockSignOut = vi.fn();
 const mockSignInWithOAuth = vi.fn();
 const unsubscribeMock = vi.fn();
+let authStateChangeHandler:
+  | ((event: string, session: typeof MOCK_SESSION | null) => void | Promise<void>)
+  | null = null;
 
 vi.mock("../src/resources/config/config", () => ({
   default: {
@@ -118,14 +121,18 @@ describe("AuthSessionProvider", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+    authStateChangeHandler = null;
 
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
 
-    mockOnAuthStateChange.mockImplementation(() => ({
-      data: { subscription: { unsubscribe: unsubscribeMock } },
-    }));
+    mockOnAuthStateChange.mockImplementation((callback) => {
+      authStateChangeHandler = callback;
+      return {
+        data: { subscription: { unsubscribe: unsubscribeMock } },
+      };
+    });
     mockSignOut.mockResolvedValue({ error: null });
   });
 
@@ -159,8 +166,7 @@ describe("AuthSessionProvider", () => {
     );
   });
 
-  // TODO: Fix race condition — getUser 401 resolves after getSession restores "authenticated"
-  it.skip("invalidates a stale persisted session and clears it locally", async () => {
+  it("invalidates a stale persisted session and clears it locally", async () => {
     mockGetSession.mockResolvedValue({
       data: { session: MOCK_SESSION },
       error: null,
@@ -182,6 +188,34 @@ describe("AuthSessionProvider", () => {
       "expired"
     );
     expect(mockSignOut).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  it("does not let INITIAL_SESSION restore auth after boot validation invalidates it", async () => {
+    mockGetSession.mockResolvedValue({
+      data: { session: MOCK_SESSION },
+      error: null,
+    });
+    mockGetUser.mockResolvedValue({
+      data: { user: null },
+      error: { status: 401, message: "JWT expired" },
+    });
+
+    await act(async () => {
+      root.render(renderWithProvider(React.createElement(AuthHarness)));
+    });
+    await flush();
+
+    await act(async () => {
+      await authStateChangeHandler?.("INITIAL_SESSION", MOCK_SESSION);
+    });
+    await flush();
+
+    expect(container.querySelector('[data-testid="status"]')?.textContent).toBe(
+      "invalidated"
+    );
+    expect(container.querySelector('[data-testid="reason"]')?.textContent).toBe(
+      "expired"
+    );
   });
 
   it("broadcast-driven deletion invalidates another tab immediately", async () => {
